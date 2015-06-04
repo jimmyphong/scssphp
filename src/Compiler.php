@@ -787,6 +787,8 @@ class Compiler
             case 'assign':
                 list(, $name, $value) = $child;
 
+                // TODO: handle !global flag
+
                 if ($name[0] == 'var') {
                     $flag = isset($child[3]) ? $child[3] : null;
                     $isDefault = $flag === '!default';
@@ -856,6 +858,8 @@ class Compiler
                 break;
             case 'extend':
                 list(, $selectors) = $child;
+
+                // TODO: handle !optional flag
 
                 foreach ($selectors as $sel) {
                     // only use the first one
