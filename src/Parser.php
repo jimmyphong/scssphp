@@ -426,6 +426,12 @@ class Parser
                 if (! isset($this->charset)) {
                     $statement = array('charset', $charset);
 
+                    $statement[self::SOURCE_POSITION] = $s;
+
+                    if (! $this->rootParser) {
+                        $statement[self::SOURCE_PARSER] = $this;
+                    }
+
                     $this->charset = $statement;
                 }
 
@@ -600,7 +606,7 @@ class Parser
      *
      * @return \stdClass
      */
-    protected function pushBlock($selectors, $pos = null)
+    protected function pushBlock($selectors, $pos = 0)
     {
         $b = new \stdClass;
         $b->parent = $this->env; // not sure if we need this yet

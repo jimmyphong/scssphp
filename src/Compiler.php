@@ -49,6 +49,9 @@ use Leafo\ScssPhp\Parser;
  */
 class Compiler
 {
+    const LINE_COMMENTS = 1;
+    const DEBUG_INFO    = 2;
+
     static protected $operatorNames = array(
         '+' => 'add',
         '-' => 'sub',
@@ -98,6 +101,7 @@ class Compiler
     protected $registeredVars = array();
 
     protected $numberPrecision = 5;
+    protected $lineNumberStyle = null;
 
     protected $formatter = 'Leafo\ScssPhp\Formatter\Nested';
 
@@ -466,8 +470,29 @@ class Compiler
         $env->selectors =
             array_map(array($this, 'evalSelector'), $block->selectors);
 
+        if (count($env->selectors) && isset($this->lineNumberStyle)) {
+            $out = $this->makeOutputBlock('comment');
+
+            $file = $block->sourceParser->getSourceName();
+            $line = $block->sourceParser->getLineNo($block->sourcePosition);
+
+            switch ($this->lineNumberStyle) {
+                case self::LINE_COMMENTS:
+                    $out->lines[] = '/* line ' . $line . ', ' . $file . ' */';
+                    break;
+                case self::DEBUG_INFO:
+                    $out->lines[] = '@media -sass-debug-info{filename{font-family:"' . $file
+                                  . '"}line{font-family:' . $line . '}}';
+                    break;
+            }
+
+            $this->scope->children[] = $out;
+        }
+
         $out = $this->makeOutputBlock(null, $this->multiplySelectors($env));
+
         $this->scope->children[] = $out;
+
         $this->compileChildren($block->children, $out);
 
         $this->popEnv();
@@ -2073,6 +2098,11 @@ class Compiler
     public function setFormatter($formatterName)
     {
         $this->formatter = $formatterName;
+    }
+
+    public function setLineNumberStyle($lineNumberStyle)
+    {
+        $this->lineNumberStyle = $lineNumberStyle;
     }
 
     public function registerFunction($name, $func)
