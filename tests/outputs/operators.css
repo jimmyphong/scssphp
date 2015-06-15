@@ -166,3 +166,9 @@ div {
 
 .alt .j {
   margin: 0 -2em; }
+
+div {
+  *margin-left: 2.07447%; }
+
+.foo {
+  width: 12.5%; }
