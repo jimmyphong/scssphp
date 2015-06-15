@@ -1182,6 +1182,10 @@ class Compiler
                     }
                 }
 
+// TODO: this is problematic
+/*
+  if not inExp, we should test the value for incompatible units
+*/
                 return $this->expToString($value);
             case 'unary':
                 list(, $op, $exp, $inParens) = $value;
