@@ -1119,6 +1119,19 @@ class Compiler
                             $this->throwError("Cannot modulo by a number with units: $right[1]$right[2].");
                         }
 
+// TODO: this is problematic
+/*
+  We have to track the unit(s) in both the numerator and denominator, e.g.,
+    $temp: 1in * 2em;
+    div { margin-left: ($temp / 96px); }
+
+    $tmp: 1in * 1in;
+    div { margin-right: $tmp / 96px; }
+  becomes:
+    div { left: 2em; }
+
+    div { left: 1in; }
+*/
                         $unitChange = true;
                         $emptyUnit = $left[2] == '' || $right[2] == '';
                         $targetUnit = '' != $left[2] ? $left[2] : $right[2];
@@ -1156,6 +1169,12 @@ class Compiler
 
                     if (isset($out)) {
                         if ($unitChange && $out[0] == 'number') {
+// TODO: this is problematic
+/*
+  when cancelling units in numerator and denominator,
+  we should cancel matching units,
+  then convert and cancel from left to right?
+*/
                             $out = $this->coerceUnit($out, $targetUnit);
                         }
 
