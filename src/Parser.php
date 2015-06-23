@@ -13,6 +13,7 @@
 namespace Leafo\ScssPhp;
 
 use Leafo\ScssPhp\Compiler;
+use Leafo\ScssPhp\Number;
 
 /**
  * SCSS parser
@@ -1242,7 +1243,7 @@ class Parser
     protected function unit(&$unit)
     {
         if ($this->match('([0-9]*(\.)?[0-9]+)([%a-zA-Z]+)?', $m)) {
-            $unit = array('number', $m[1], empty($m[3]) ? '' : $m[3]);
+            $unit = new Number($m[1], $m[3]);
 
             return true;
         }
