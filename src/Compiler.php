@@ -77,11 +77,12 @@ class Compiler
     static protected $unitTable = array(
         'in' => array(
             'in' => 1,
-            'pt' => 72,
             'pc' => 6,
+            'pt' => 72,
+            'px' => 96,
             'cm' => 2.54,
             'mm' => 25.4,
-            'px' => 96,
+            'q'  => 101.6,
         )
     );
 
